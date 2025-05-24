@@ -1,9 +1,11 @@
 import React from "react";
 import {Link, useLocation, useNavigate} from "react-router-dom";
+import {UseAuth} from "../context/UseAuth.ts";
 
 const Navbar: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    const { isAuthenticated , logout} = UseAuth();
 
     const routes = [
         { to: "/", name: "Home" },
@@ -15,6 +17,11 @@ const Navbar: React.FC = () => {
     const isActive = (to: string) => to === location.pathname;
     const onLoginPressed = (): void => {
         navigate("/login")
+    }
+
+    const onLogOutPressed = (): void => {
+        navigate("/login")
+        logout()
     }
     return (
         <nav className="w-full fixed top-0 z-50 bg-white shadow-md">
@@ -37,9 +44,16 @@ const Navbar: React.FC = () => {
                     </div>
 
                     <div className="ml-auto">
-                        <button onClick={onLoginPressed} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-                            Login
-                        </button>
+                        {!isAuthenticated &&(
+                            <button onClick={onLoginPressed} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                                Login
+                            </button>
+                        )}
+                        {isAuthenticated && (
+                            <button onClick={onLogOutPressed} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                                Logout
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>

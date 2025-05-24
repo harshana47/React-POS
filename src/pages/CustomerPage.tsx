@@ -1,23 +1,26 @@
-import { useState } from "react";
+import {useReducer, useState} from "react";
 import CustomerForm from "../forms/CustomerForm.tsx";
 import type { Customer } from "../types/Customer.ts";
 import { customerData } from "../data/CustomerData.ts";
+import customerReducerActions from "../reduce/CustomerReducer.ts";
 
 const CustomerPage = () => {
-    const [customers, setCustomers] = useState<Customer[]>(customerData);
+    const [customers, dispatch] = useReducer(customerReducerActions, customerData);
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null);
 
     const onSubmit = (customer: Customer) => {
         if (editingCustomer) {
-            // Update existing customer
-            setCustomers(prev =>
-                prev.map(c => (c.id === editingCustomer.id ? { ...customer, id: editingCustomer.id } : c))
-            );
+            dispatch({
+                type: "UPDATE",
+                payload: { ...customer, id: editingCustomer.id },
+            });
         } else {
-            // Add new customer with a new ID (example: auto-increment)
             const newId = customers.length > 0 ? Math.max(...customers.map(c => c.id)) + 1 : 1;
-            setCustomers([...customers, { ...customer, id: newId }]);
+            dispatch({
+                type: "ADD",
+                payload: { ...customer, id: newId },
+            });
         }
         setIsDialogOpen(false);
         setEditingCustomer(null);
@@ -42,10 +45,13 @@ const CustomerPage = () => {
     const handleDelete = (id: number) => {
         const confirmed = window.confirm("Are you sure you want to delete this customer?");
         if (confirmed) {
-            setCustomers(customers.filter((customer) => customer.id !== id));
-            console.log("Customer " + id + " has been deleted");
+            dispatch({
+                type: "DELETE",
+                payload: id,
+            });
         }
     };
+
 
     return (
         <div className="p-8 font-sans bg-gray-50 min-h-screen">

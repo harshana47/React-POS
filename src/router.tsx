@@ -9,6 +9,7 @@ import Login from "./pages/Login.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import StockPage from "./pages/StockPage.tsx";
 import Orders from "./pages/Orders.tsx";
+import PrivateRoutes from "./pages/PrivateRoutes.tsx";
 
 const router = createBrowserRouter([
     {
@@ -23,7 +24,16 @@ const router = createBrowserRouter([
             { path: '/dashboard', element: <Dashboard /> },
             { path: '/dashboard/customer', element: <CustomerPage /> },
             { path: '/dashboard/stocks', element: <StockPage /> },
-            { path: '/dashboard/orders', element: <Orders /> }
+            { path: '/dashboard/orders', element: <Orders /> },
+            {
+                element: <PrivateRoutes/>,
+                children: [
+                    { path: '/dashboard', element: <Dashboard /> },
+                    { path: '/dashboard/customer', element: <CustomerPage /> },
+                    { path: '/dashboard/stocks', element: <StockPage /> },
+                    { path: '/dashboard/orders', element: <Orders /> }
+                ]
+            }
         ]
     }
 ]);

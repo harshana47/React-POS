@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import {UseAuth} from "../context/UseAuth.ts";
 
 const Login: React.FC = () => {
+    const {login} = UseAuth()
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -13,6 +15,7 @@ const Login: React.FC = () => {
         e.preventDefault();
 
         if (username === "harsh" && password === "123") {
+            login()
             setError("");
             toast.success("Logged in");
             navigate("/dashboard");
